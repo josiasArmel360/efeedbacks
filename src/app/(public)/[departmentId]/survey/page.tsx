@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { connection } from "next/server";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
@@ -46,6 +47,7 @@ async function DepartmentSurveyData({
   params,
   searchParams,
 }: DepartmentSurveyPageProps) {
+  await connection();
   const { departmentId } = await params;
   const search = await searchParams;
 

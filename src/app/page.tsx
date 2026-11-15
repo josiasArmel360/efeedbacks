@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { connection } from "next/server";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -497,6 +498,7 @@ function HomeContent({
 }
 
 async function HomeData() {
+  await connection();
   const activeDepartments = await getActiveDepartments();
 
   return <HomeContent activeDepartments={activeDepartments} />;

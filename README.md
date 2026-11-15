@@ -10,6 +10,7 @@
 [![Drizzle ORM](https://img.shields.io/badge/Drizzle_ORM-0.45-C5F74F?style=for-the-badge&logo=drizzle)](https://orm.drizzle.team/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Neon_Serverless-4169E1?style=for-the-badge&logo=postgresql)](https://neon.tech/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
+[![Resend](https://img.shields.io/badge/Resend-Emails-000000?style=for-the-badge&logo=resend)](https://resend.com/)
 [![Package Manager](https://img.shields.io/badge/Bun-1.3-FBF0DF?style=for-the-badge&logo=bun)](https://bun.sh/)
 
 [Fonctionnalités](#-fonctionnalités-clés) • [Architecture](#-architecture-du-projet) • [Installation](#-installation--démarrage-rapide) • [Base de Données](#-base-de-données--migrations) • [Sécurité](#-sécurité--conformité)
@@ -72,6 +73,9 @@ Développée pour répondre aux exigences des comités de qualité, d'éthique e
   - Gestion de l'avatar avec UploadThing (nettoyage automatique des anciens fichiers).
   - Authentification à Deux Facteurs (**2FA TOTP**) avec QR Code et codes de récupération.
   - Gestion et révocation des sessions actives multi-appareils (détection OS/navigateur via `ua-parser-js`).
+- **Emails Transactionnels Médicaux ([Resend](https://resend.com/) + [React Email](https://react.email/))** :
+  - Envoi sécurisé des invitations de collaborateurs, activation de compte, vérification d'adresse email, réinitialisation de mot de passe et codes OTP 2FA.
+  - Gabarits HTML responsifs aux couleurs de l'établissement avec fallback de simulation en mode développement.
 
 ---
 
@@ -86,6 +90,7 @@ Développée pour répondre aux exigences des comités de qualité, d'éthique e
 | **Base de Données** | [PostgreSQL](https://www.postgresql.org/) / [Neon](https://neon.tech/) | Base relationnelle serverless avec pools de connexion |
 | **ORM** | [Drizzle ORM](https://orm.drizzle.team/) | Requêtage typé de bout en bout, schéma déclaratif et migrations Kit |
 | **Authentification** | [Better Auth](https://www.better-auth.com/) | Sessions chiffrées, cookies HTTP-only, 2FA TOTP, protection brute-force |
+| **Emails** | [Resend](https://resend.com/) + React Email | Envoi transactionnel des invitations, réinitialisations de mot de passe et codes 2FA |
 | **Validation** | [Zod](https://zod.dev/) + React Hook Form | Schémas stricts partagés client/serveur, formulaires dynamiques |
 | **Génération PDF** | [@react-pdf/renderer](https://react-pdf.org/) | Récépissés A5 clients et affiches A4 d'établissement |
 | **Graphiques** | [Recharts](https://recharts.org/) | Tableaux de bord analytiques et statistiques interactives |
@@ -120,6 +125,7 @@ suggestion-box/
 │   │   ├── buttons/                 # Boutons d'action spécialisés
 │   │   ├── data-table/              # Tableau TanStack générique avec pagination
 │   │   ├── inputs/                  # Inputs officiels (Rating, DatePicker, Select, etc.)
+│   │   ├── mails/                   # Modèles d'emails React Email & transporteur Resend
 │   │   ├── pages/                   # Vues et composants modulaires par écran
 │   │   ├── public/                  # Navbar et Footer des pages publiques
 │   │   └── ui/                      # Composants atomiques (Card, Button, Dialog, etc.)
@@ -180,6 +186,10 @@ ADMIN_PASSWORD="VotreMotDePasseRobuste123!"
 
 # Hébergement de Fichiers (UploadThing)
 UPLOADTHING_TOKEN="votre_token_uploadthing"
+
+# Service d'Emails Transactionnels (Resend + React Email)
+RESEND_API_KEY="re_votre_cle_api_resend"
+EMAIL_FROM="qualite@votre-domaine-hospitalier.fr" # Facultatif : "onboarding@resend.dev" par défaut en dev
 ```
 
 ### 4. Initialiser la base de données

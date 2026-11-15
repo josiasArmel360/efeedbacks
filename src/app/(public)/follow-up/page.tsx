@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { connection } from "next/server";
 import type { Metadata } from "next";
 
 import { PublicNavbar } from "@/components/public/navbar";
@@ -22,6 +23,7 @@ interface FollowUpPageProps {
 }
 
 async function FollowUpData({ searchParams }: FollowUpPageProps) {
+  await connection();
   const params = await searchParams;
   const code = params.code?.trim().toUpperCase() || "";
 

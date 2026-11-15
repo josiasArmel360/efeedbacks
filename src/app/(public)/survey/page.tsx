@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { connection } from "next/server";
 import type { Metadata } from "next";
 
 import { PublicNavbar } from "@/components/public/navbar";
@@ -25,6 +26,7 @@ interface SurveyPageProps {
 }
 
 async function SurveyData({ searchParams }: SurveyPageProps) {
+  await connection();
   const params = await searchParams;
 
   const initialActor =
