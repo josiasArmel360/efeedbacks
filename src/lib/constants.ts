@@ -1,4 +1,4 @@
-export const APP_NAME = "Feed Backs";
+export const APP_NAME = "eFeedbacks";
 
 export const UNAUTHORIZED_MESSAGE =
   "Vous n'êtes pas autorisé à effectuer cette action";
