@@ -1,6 +1,6 @@
 "use client";
 
-import { UseFormReturn } from "react-hook-form";
+import { UseFormReturn, useWatch } from "react-hook-form";
 import { ThumbsUp, ThumbsDown, Lightbulb, ShieldCheck } from "lucide-react";
 
 import {
@@ -30,10 +30,13 @@ export const StepSummary = ({
   lockedDepartment,
   disabled,
 }: StepSummaryProps) => {
-  const actorType = form.watch("actorType");
-  const isAnonymous = form.watch("isAnonymous");
-  const authorName = form.watch("authorName");
-  const departmentId = form.watch("departmentId");
+  const actorType = useWatch({ control: form.control, name: "actorType" });
+  const isAnonymous = useWatch({ control: form.control, name: "isAnonymous" });
+  const authorName = useWatch({ control: form.control, name: "authorName" });
+  const departmentId = useWatch({
+    control: form.control,
+    name: "departmentId",
+  });
 
   const selectedDepartment =
     lockedDepartment || departments.find((d) => d.id === departmentId);

@@ -28,9 +28,7 @@ function formatTimelineDate(date?: Date | string | null): string | null {
   }
 }
 
-export const FollowUpTimeline: React.FC<FollowUpTimelineProps> = ({
-  feedback,
-}) => {
+export const FollowUpTimeline = ({ feedback }: FollowUpTimelineProps) => {
   const currentStep = STATUS_STEP_INDEX[feedback.status] ?? 1;
   const createdDateStr = formatTimelineDate(feedback.createdAt);
   const updatedDateStr = formatTimelineDate(feedback.updatedAt);
@@ -77,8 +75,7 @@ export const FollowUpTimeline: React.FC<FollowUpTimelineProps> = ({
     },
   ];
 
-  const progressPct =
-    currentStep === 1 ? 18 : currentStep === 2 ? 55 : 100;
+  const progressPct = currentStep === 1 ? 18 : currentStep === 2 ? 55 : 100;
 
   return (
     <Card className="border-border/60 shadow-xs py-0 overflow-hidden animate-in fade-in slide-in-from-bottom-3 duration-500">
@@ -179,4 +176,3 @@ export const FollowUpTimeline: React.FC<FollowUpTimelineProps> = ({
     </Card>
   );
 };
-

@@ -65,13 +65,13 @@ export interface SurveyFormProps {
   onSuccess: (result: { code: string; payload: SubmitFeedbackPayload }) => void;
 }
 
-export const SurveyForm: React.FC<SurveyFormProps> = ({
+export const SurveyForm = ({
   departments,
   sections,
   lockedDepartment,
   initialActorType,
   onSuccess,
-}) => {
+}: SurveyFormProps) => {
   const [step, setStep] = useState<number>(() => {
     if (typeof window === "undefined") return 1;
     try {
@@ -108,6 +108,7 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({
 
   const form = useForm<SubmitFeedbackPayload>({
     resolver: zodResolver(schema),
+    mode: "onTouched",
     defaultValues: {
       actorType: initialActorType || "malade",
       isAnonymous: true,
@@ -116,7 +117,7 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({
       authorPhone: "",
       authorRoleOrRoom: "",
       departmentId: lockedDepartment?.id || departments[0]?.id || null,
-      visitDate: undefined,
+      visitDate: new Date(),
       overallRating: 5,
       recommendation: "oui",
       positivePoints: "",
@@ -125,7 +126,6 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({
       answers: {},
       website: "",
     },
-    mode: "onTouched",
   });
 
   // 1. Restauration du brouillon depuis localStorage au premier montage
@@ -168,7 +168,12 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({
   }, [form, lockedDepartment]);
 
   // Navigation Étape Suivante avec validation ciblée
-  const handleNextStep = async () => {
+  const handleNextStep = async (e?: React.MouseEvent<HTMLButtonElement>) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
     if (step === 1) {
       const valid = await form.trigger([
         "actorType",
@@ -199,12 +204,22 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({
     }
   };
 
-  const handlePrevStep = () => {
+  const handlePrevStep = (e?: React.MouseEvent<HTMLButtonElement>) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     setStep((s) => Math.max(1, s - 1));
   };
 
   // Soumission finale du formulaire
   const onSubmit = async (values: SubmitFeedbackPayload) => {
+    // Sécurité stricte : empêcher toute soumission tant qu'on n'est pas à l'étape finale (4)
+    if (step !== 4) {
+      await handleNextStep();
+      return;
+    }
+
     try {
       setIsSubmitting(true);
       const res = await submitFeedbackAction(values);
@@ -248,10 +263,7 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({
       {/* Synchronisation continue du brouillon via useWatch sans re-render du formulaire */}
       <SurveyDraftSync control={form.control} step={step} />
 
-      {/* Barre d'accentuation supérieure */}
-      {/* <div className="h-1.5 w-full bg-linear-to-r from-primary/70 via-primary to-primary/40" /> */}
-
-      <CardContent className="p-5 sm:p-8 space-y-8">
+      <CardContent className="p-4 sm:p-6 space-y-8">
         {/* Stepper de progression */}
         <SurveyStepper
           currentStep={step}
@@ -261,7 +273,20 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({
         />
 
         {/* Formulaire à étapes */}
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          onKeyDown={(e) => {
+            if (
+              e.key === "Enter" &&
+              step < 4 &&
+              (e.target as HTMLElement).tagName !== "TEXTAREA"
+            ) {
+              e.preventDefault();
+              handleNextStep();
+            }
+          }}
+          className="space-y-8"
+        >
           {step === 1 && <StepProfile form={form} disabled={isSubmitting} />}
 
           {step === 2 && (
@@ -294,6 +319,7 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({
           <div className="flex items-center justify-between gap-3 pt-6 border-t border-border/50">
             {step > 1 ? (
               <Button
+                key="survey-prev-button"
                 type="button"
                 variant="outline"
                 onClick={handlePrevStep}
@@ -309,6 +335,7 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({
 
             {step < 4 ? (
               <Button
+                key="survey-next-button"
                 type="button"
                 onClick={handleNextStep}
                 disabled={isSubmitting}
@@ -319,6 +346,7 @@ export const SurveyForm: React.FC<SurveyFormProps> = ({
               </Button>
             ) : (
               <Button
+                key="survey-submit-button"
                 type="submit"
                 disabled={isSubmitting}
                 className="rounded-xl h-11 px-7 font-bold shadow-lg shadow-primary/20 bg-linear-to-r from-primary to-primary/90 hover:opacity-95 text-primary-foreground"

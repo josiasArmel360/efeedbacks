@@ -29,9 +29,7 @@ interface FollowUpTicketCardProps {
   feedback: Feedback;
 }
 
-export const FollowUpTicketCard: React.FC<FollowUpTicketCardProps> = ({
-  feedback,
-}) => {
+export const FollowUpTicketCard = ({ feedback }: FollowUpTicketCardProps) => {
   const [copied, setCopied] = useState(false);
   const [showDetails, setShowDetails] = useState(true);
 

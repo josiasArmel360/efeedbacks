@@ -190,10 +190,7 @@ export const SurveySuccess = ({
   return (
     <div className="w-full max-w-3xl mx-auto py-8 sm:py-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <Card className="border-border/60 shadow-xl overflow-hidden bg-card/95 backdrop-blur-md">
-        {/* Barre lumineuse supérieure */}
-        <div className="h-2 w-full bg-linear-to-r from-emerald-500 via-teal-500 to-sky-500" />
-
-        <CardContent className="p-6 sm:p-10 space-y-8">
+        <CardContent className="p-4 sm:p-6 space-y-8">
           {/* En-tête de confirmation */}
           <div className="text-center space-y-4">
             <div className="mx-auto h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-emerald-500/10 border-2 border-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shadow-lg shadow-emerald-500/10 animate-in zoom-in-75 duration-500">

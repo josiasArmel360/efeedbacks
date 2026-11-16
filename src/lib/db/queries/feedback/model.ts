@@ -33,7 +33,7 @@ const RES = RESOURCE.FEEDBACK;
 
 const ipRateLimitMap = new Map<string, number[]>();
 
-function checkRateLimit(ip: string): boolean {
+const checkRateLimit = (ip: string): boolean => {
   const now = Date.now();
   const windowMs = 10 * 60 * 1000; // 10 minutes
   const maxAttempts = 5;
@@ -49,18 +49,18 @@ function checkRateLimit(ip: string): boolean {
   timestamps.push(now);
   ipRateLimitMap.set(ip, timestamps);
   return true;
-}
+};
 
-function generateCodeCandidate(year: number): string {
+const generateCodeCandidate = (year: number): string => {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   let suffix = "";
   for (let i = 0; i < 4; i++) {
     suffix += chars.charAt(Math.floor(Math.random() * chars.length));
   }
   return `FB-${year}-${suffix}`;
-}
+};
 
-async function generateUniqueFeedbackCode(): Promise<string> {
+const generateUniqueFeedbackCode = async (): Promise<string> => {
   const year = new Date().getFullYear();
   for (let attempt = 0; attempt < 5; attempt++) {
     const candidate = generateCodeCandidate(year);
@@ -74,7 +74,7 @@ async function generateUniqueFeedbackCode(): Promise<string> {
   }
   // En cas de collision improbable
   return `FB-${year}-${Date.now().toString(36).toUpperCase().slice(-4)}`;
-}
+};
 
 export interface FeedbackFilterOptions {
   status?: FeedbackStatus;

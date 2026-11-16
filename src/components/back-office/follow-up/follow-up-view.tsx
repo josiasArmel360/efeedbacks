@@ -39,10 +39,10 @@ interface FollowUpViewProps {
   initialFeedback?: Feedback | null;
 }
 
-export const FollowUpView: React.FC<FollowUpViewProps> = ({
+export const FollowUpView = ({
   initialCode = "",
   initialFeedback = null,
-}) => {
+}: FollowUpViewProps) => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -86,21 +86,21 @@ export const FollowUpView: React.FC<FollowUpViewProps> = ({
       <section className="relative overflow-hidden py-12 md:py-16 border-b border-border/40 bg-linear-to-b from-primary/10 via-background to-background">
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(#13a89e_1px,transparent_1px)] [background-size:24px_24px] opacity-[0.14] dark:opacity-[0.08]"
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(#13a89e_1px,transparent_1px)] bg-size-[24px_24px] opacity-[0.14] dark:opacity-[0.08]"
         />
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-72 w-[38rem] max-w-full rounded-full bg-primary/15 blur-3xl"
+          className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-72 w-152 max-w-full rounded-full bg-primary/15 blur-3xl"
         />
 
         <div className="relative container mx-auto max-w-4xl px-4 text-center space-y-5">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-background/90 backdrop-blur-sm text-primary border border-primary/25 shadow-2xs animate-in fade-in slide-in-from-bottom-2 duration-500">
             <Sparkles className="h-3.5 w-3.5" />
-            <span>TRAÇABILITÉ &amp; SUIVI EN TEMPS RÉEL</span>
+            <span>TRAÇABILITÉ & SUIVI EN TEMPS RÉEL</span>
           </div>
 
           <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-foreground max-w-2xl mx-auto leading-[1.15]">
-            Suivez l&apos;instruction de{" "}
+            Suivez l'instruction de{" "}
             <span className="bg-linear-to-r from-primary via-teal-500 to-emerald-500 bg-clip-text text-transparent">
               votre dossier
             </span>
@@ -303,7 +303,7 @@ export const FollowUpView: React.FC<FollowUpViewProps> = ({
   );
 };
 
-export const FollowUpSkeleton: React.FC = () => {
+export const FollowUpSkeleton = () => {
   return (
     <div className="flex-1">
       <div className="py-14 border-b border-border/40">
@@ -322,4 +322,3 @@ export const FollowUpSkeleton: React.FC = () => {
     </div>
   );
 };
-

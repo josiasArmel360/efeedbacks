@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { UseFormReturn } from "react-hook-form";
+import { UseFormReturn, useWatch } from "react-hook-form";
 import { Sparkles } from "lucide-react";
 
 import { SurveyFieldRenderer } from "../survey-field-renderer";
@@ -19,7 +19,7 @@ export const StepCriteria = ({
   sections,
   disabled,
 }: StepCriteriaProps) => {
-  const actorType = form.watch("actorType");
+  const actorType = useWatch({ control: form.control, name: "actorType" });
 
   // Filtrage des sections et champs correspondant au profil de l'usager
   const visibleSections = useMemo(() => {

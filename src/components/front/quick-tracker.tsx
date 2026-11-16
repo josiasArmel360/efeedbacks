@@ -13,7 +13,7 @@ import {
   type TrackFeedbackData,
 } from "@/lib/db/queries/feedback/validator";
 
-export const QuickTracker: React.FC = () => {
+export const QuickTracker = () => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -78,5 +78,3 @@ export const QuickTracker: React.FC = () => {
     </div>
   );
 };
-
-export default QuickTracker;

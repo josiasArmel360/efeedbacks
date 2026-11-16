@@ -198,7 +198,6 @@ export type BadgeVariant =
   | "ghost"
   | "link";
 
-
 export type BadgeSize = "sm" | "md" | "lg";
 
 export interface StatusConfig {
@@ -292,9 +291,21 @@ export const statusConfig: Record<string, StatusConfig> = {
 
   // --- Attente / Planification / Attention ---
   en_attente: { label: "En attente", icon: Clock, variant: "warning" },
-  en_attente_verification: { label: "En attente vérif.", icon: Clock, variant: "warning" },
-  en_attente_validation: { label: "En attente validation", icon: Clock, variant: "warning" },
-  en_attente_signature: { label: "En attente signature", icon: Clock, variant: "warning" },
+  en_attente_verification: {
+    label: "En attente vérif.",
+    icon: Clock,
+    variant: "warning",
+  },
+  en_attente_validation: {
+    label: "En attente validation",
+    icon: Clock,
+    variant: "warning",
+  },
+  en_attente_signature: {
+    label: "En attente signature",
+    icon: Clock,
+    variant: "warning",
+  },
   a_reverser: { label: "À reverser", icon: Clock, variant: "warning" },
   non_applicable: { label: "Non applicable", icon: Circle, variant: "neutral" },
   planifie: { label: "Planifié", icon: Clock, variant: "warning" },
@@ -304,7 +315,11 @@ export const statusConfig: Record<string, StatusConfig> = {
   suspendu: { label: "Suspendu", icon: Clock, variant: "warning" },
   suspendue: { label: "Suspendue", icon: Ban, variant: "orange" },
   a_verifier: { label: "À vérifier", icon: AlertTriangle, variant: "warning" },
-  en_maintenance: { label: "En maintenance", icon: AlertTriangle, variant: "warning" },
+  en_maintenance: {
+    label: "En maintenance",
+    icon: AlertTriangle,
+    variant: "warning",
+  },
   occupe: { label: "Occupé", icon: Lock, variant: "info" },
   vendu: { label: "Vendu", icon: CheckCircle2, variant: "purple" },
   partiel: { label: "Partiel", icon: RotateCcw, variant: "warning" },
@@ -357,7 +372,11 @@ export const statusConfig: Record<string, StatusConfig> = {
   haute: { label: "Haute", icon: AlertTriangle, variant: "orange" },
   malade: { label: "Patient", icon: UserCheck, variant: "info" },
   parent_malade: { label: "Proche", icon: UserPlus, variant: "purple" },
-  personnel_soignant: { label: "Soignant", icon: ShieldCheck, variant: "success" },
+  personnel_soignant: {
+    label: "Soignant",
+    icon: ShieldCheck,
+    variant: "success",
+  },
   personnel: { label: "Personnel", icon: Building2, variant: "neutral" },
   oui: { label: "Oui", icon: CheckCircle2, variant: "success" },
   non: { label: "Non", icon: XCircle, variant: "error" },
@@ -392,20 +411,15 @@ const variantClasses: Record<BadgeVariant, string> = {
     "bg-orange-100/80 text-orange-700 border-orange-200 dark:bg-orange-500/10 dark:text-orange-400 dark:border-orange-500/20",
   outline:
     "bg-background text-foreground border-border/80 dark:border-border/60",
-  default:
-    "bg-primary/10 text-primary border-primary/20",
-  secondary:
-    "bg-secondary text-secondary-foreground border-transparent",
+  default: "bg-primary/10 text-primary border-primary/20",
+  secondary: "bg-secondary text-secondary-foreground border-transparent",
   destructive:
     "bg-destructive/10 text-destructive border-destructive/20 dark:bg-destructive/20 dark:border-destructive/40",
-  ghost:
-    "hover:bg-muted hover:text-muted-foreground border-transparent",
-  link:
-    "text-primary underline-offset-4 hover:underline border-transparent",
+  ghost: "hover:bg-muted hover:text-muted-foreground border-transparent",
+  link: "text-primary underline-offset-4 hover:underline border-transparent",
 };
 
-
-export const Badge: React.FC<BadgeProps> = ({
+export const Badge = ({
   status,
   variant: propVariant,
   size = "md",
@@ -414,7 +428,7 @@ export const Badge: React.FC<BadgeProps> = ({
   children,
   className,
   ...props
-}) => {
+}: BadgeProps) => {
   // 1. Détermination du statut normalisé si présent
   let config: StatusConfig | null = null;
   if (status !== undefined && status !== null) {

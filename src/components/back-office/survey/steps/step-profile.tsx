@@ -283,7 +283,7 @@ export const StepProfile = ({ form, disabled }: StepProfileProps) => {
                 name="authorRoleOrRoom"
                 label={
                   currentActor === "malade" || currentActor === "parent_malade"
-                    ? "Chambre, Service (optionnel)"
+                    ? "Chambre/Lit (optionnel)"
                     : "Fonction (optionnel)"
                 }
                 placeholder={
