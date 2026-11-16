@@ -100,7 +100,7 @@ export const SubmitFeedbackBaseSchema = z
       .nullable(),
     answers: z.record(
       z.string(),
-      z.union([z.string(), z.number(), z.date()]),
+      z.union([z.string(), z.number(), z.date()]).optional(),
     ),
     website: z.string().max(0, "Tentative automatisée détectée.").optional(), // Honeypot anti-spam
   })

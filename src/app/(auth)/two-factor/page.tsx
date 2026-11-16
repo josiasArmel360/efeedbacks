@@ -2,8 +2,8 @@ import { Metadata } from "next";
 import { Suspense } from "react";
 import { Lock, ShieldAlert, Smartphone } from "lucide-react";
 
-import { TwoFactorForm } from "@/components/pages/auth/two-factor-form";
-import { LeftImageSide } from "@/components/left-image-side";
+import { TwoFactorForm } from "@/components/auth/two-factor-form";
+import { LeftImageSide } from "@/components/auth/left-image-side";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export const metadata: Metadata = {

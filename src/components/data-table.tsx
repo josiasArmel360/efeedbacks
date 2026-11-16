@@ -87,6 +87,7 @@ import {
 } from "@/components/ui/tooltip";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { Loader } from "./image";
 
 /**
  * Configuration globale des fonctionnalités TanStack Table v9.
@@ -615,7 +616,7 @@ export const DataTable = <TData extends RowData>({
         <CardContent className="p-2.5 space-y-3">
           <div className="relative overflow-hidden flex flex-col border-b">
             <Table>
-              <TableHeader className="sticky top-0 z-5 bg-background h-13 shadow-md">
+              <TableHeader className="z-5 bg-background h-12 shadow-md">
                 {table.getHeaderGroups().map((headerGroup) => (
                   <TableRow key={headerGroup.id}>
                     {renderSubComponent && (
@@ -721,8 +722,16 @@ export const DataTable = <TData extends RowData>({
             </Table>
 
             {isFetching && (
-              <div className="absolute inset-0 bg-black/6 flex items-center justify-center z-10 rounded-md">
-                <div className="animate-spin h-10 w-10 border-muted-foreground border-b-2 border-r rounded-full" />
+              <div
+                className="absolute inset-0 z-10 flex items-center justify-center rounded-md bg-background/75 backdrop-blur-[2px] transition-opacity"
+                role="status"
+                aria-live="polite"
+              >
+                <Loader
+                  size="sm"
+                  showTrack={false}
+                  text="Actualisation des données..."
+                />
               </div>
             )}
           </div>

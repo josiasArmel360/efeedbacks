@@ -209,18 +209,6 @@ export const updateOwnProfile = safeAc
         throw new ActionError("Profil utilisateur introuvable.");
       }
 
-      const newEmail = data.email.toLowerCase().trim();
-      if (newEmail !== existing.email.toLowerCase()) {
-        const emailCheck = await db.query.user.findFirst({
-          where: (u, { eq }) => eq(u.email, newEmail),
-        });
-        if (emailCheck && emailCheck.id !== currentUser.id) {
-          throw new ActionError(
-            `L'adresse email "${newEmail}" est déjà utilisée par un autre compte.`,
-          );
-        }
-      }
-
       const updatedName = data.name.trim();
       const updatedJob = data.job?.trim() || null;
       const updatedPhoneNumber = data.phoneNumber?.trim() || null;
@@ -454,14 +442,24 @@ export const deleteUser = safeAc
     },
   );
 
-export const getUser = async (id: string): Promise<User | null> => {
+export const getUser = async ({
+  id,
+  email,
+}: {
+  id?: string;
+  email?: string;
+}): Promise<User | null> => {
   try {
-    const res = await db.query.user.findFirst({
-      where: (u, { eq }) => eq(u.id, id),
+    const user = await db.query.user.findFirst({
+      where: (u, { eq }) => {
+        if (id) return eq(u.id, id);
+        if (email) return eq(u.email, email);
+        return undefined;
+      },
       with: { policy: { columns: { id: true, name: true, code: true } } },
     });
 
-    return (res as User) || null;
+    return user ?? null;
   } catch (error) {
     console.error("Erreur serveur (getUser):", error);
     throw error;

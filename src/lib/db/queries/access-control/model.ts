@@ -10,7 +10,7 @@ import {
   DELETE_ACCESS_DENIED_MESSAGE,
   UPDATE_ACCESS_DENIED_MESSAGE,
 } from "@/lib/constants";
-import type { AccessPolicy, AllowedModule } from "@/lib/types";
+import type { AccessPolicy } from "@/lib/types";
 import { accessPolicy, permissionException } from "@/lib/db/schema";
 import {
   CreateAccessPolicySchema,
@@ -225,7 +225,7 @@ export const getAccessPolicy = async (
       where: (r, { eq, and, isNull }) => and(eq(r.id, id), isNull(r.deletedAt)),
     });
 
-    return (policy as AccessPolicy) || null;
+    return policy ?? null;
   } catch (error) {
     console.error("Failed to fetch access policy:", error);
     return null;
@@ -257,7 +257,7 @@ export const getAccessPolicies = async (
       orderBy: (p, { desc }) => [desc(p.createdAt)],
     });
 
-    return policies as AccessPolicy[];
+    return policies ?? [];
   } catch (error) {
     console.error("Failed to fetch access policies:", error);
     return [];
@@ -272,7 +272,7 @@ export const getAccessPolicyByCode = async (
       where: (r, { and, eq, isNull }) =>
         and(eq(r.code, code.trim().toLowerCase()), isNull(r.deletedAt)),
     });
-    return (policy as AccessPolicy) || null;
+    return policy ?? null;
   } catch {
     return null;
   }
@@ -311,7 +311,7 @@ export const saveUserException = safeAc
         throw new ActionError(UPDATE_ACCESS_DENIED_MESSAGE);
       }
 
-      const targetUser = await getUser(parsedInput.userId);
+      const targetUser = await getUser({ id: parsedInput.userId });
 
       if (!targetUser) {
         throw new ActionError(
@@ -329,7 +329,7 @@ export const saveUserException = safeAc
         const [updated] = await db
           .update(permissionException)
           .set({
-            allowedModules: parsedInput.allowedModules as AllowedModule[],
+            allowedModules: parsedInput.allowedModules,
             hasFullAccess: parsedInput.hasFullAccess,
             updatedAt: new Date(),
           })
@@ -342,7 +342,7 @@ export const saveUserException = safeAc
           .insert(permissionException)
           .values({
             userId: parsedInput.userId,
-            allowedModules: parsedInput.allowedModules as AllowedModule[],
+            allowedModules: parsedInput.allowedModules,
             hasFullAccess: parsedInput.hasFullAccess,
           })
           .returning();
@@ -382,7 +382,7 @@ export const deleteUserException = safeAc
         throw new ActionError(UPDATE_ACCESS_DENIED_MESSAGE);
       }
 
-      const targetUser = await getUser(parsedInput.userId);
+      const targetUser = await getUser({ id: parsedInput.userId });
 
       if (!targetUser) {
         throw new ActionError(

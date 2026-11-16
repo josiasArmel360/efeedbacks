@@ -2,8 +2,8 @@ import { Metadata } from "next";
 import { Suspense } from "react";
 import { ShieldCheck, UserCheck, KeyRound } from "lucide-react";
 
-import { ResetPasswordForm } from "@/components/pages/auth/reset-password-form";
-import { LeftImageSide } from "@/components/left-image-side";
+import { ResetPasswordForm } from "@/components/auth/reset-password-form";
+import { LeftImageSide } from "@/components/auth/left-image-side";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export const metadata: Metadata = {

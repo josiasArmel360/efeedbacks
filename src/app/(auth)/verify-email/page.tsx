@@ -1,11 +1,11 @@
 import { Metadata } from "next";
 import { CheckCircle2, Mail, ShieldCheck, Activity } from "lucide-react";
 
-import { LeftImageSide } from "@/components/left-image-side";
-import { VerifyEmailForm } from "@/components/pages/auth/verify-email-form";
+import { LeftImageSide } from "@/components/auth/left-image-side";
+import { VerifyEmailForm } from "@/components/auth/verify-email-form";
 
 export const metadata: Metadata = {
-  title: "Vérification d'e-mail",
+  title: "Vérification d'email",
   description: "Confirmation d'adresse de messagerie professionnelle",
 };
 
@@ -16,7 +16,7 @@ export default function VerifyEmailPage() {
     <div className="flex min-h-screen">
       <LeftImageSide
         badge="CERTIFICATION DU COMPTE"
-        title={"Vérifiez votre adresse\ne-mail professionnelle"}
+        title={"Vérifiez votre adresse\nemail professionnelle"}
         subTitle="Cette confirmation garantit la légitimité des notifications et des alertes sanitaires urgentes adressées à votre service."
         items={[
           {

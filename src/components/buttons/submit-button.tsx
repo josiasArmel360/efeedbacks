@@ -3,6 +3,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
 
 import type { ButtonHTMLAttributes, ReactNode } from "react";
+import { Loader } from "../image";
 
 interface SubmitButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   isLoading?: boolean;
@@ -33,7 +34,7 @@ export const SubmitButton = ({
     >
       {isLoading ? (
         <div className="flex items-center gap-2">
-          <Spinner />
+          <Loader size="xs" theme="white" />
           <span>Patientez…</span>
         </div>
       ) : (

@@ -2,13 +2,13 @@ import { Metadata } from "next";
 import { Suspense } from "react";
 import { CheckCircle2, ShieldCheck, Activity } from "lucide-react";
 
-import { EmailVerifiedView } from "@/components/pages/auth/email-verified-view";
-import { LeftImageSide } from "@/components/left-image-side";
+import { EmailVerifiedView } from "@/components/auth/email-verified-view";
+import { LeftImageSide } from "@/components/auth/left-image-side";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export const metadata: Metadata = {
-  title: "Confirmation d'e-mail",
-  description: "Statut de la vérification de votre adresse e-mail",
+  title: "Confirmation d'email",
+  description: "Statut de la vérification de votre adresse email",
 };
 
 export const instant = false;
@@ -34,7 +34,7 @@ export default function EmailVerifiedPage({ searchParams }: Props) {
       <LeftImageSide
         badge="VALIDATION DE COMPTE"
         title={"Authentification de\nvotre identité médicale"}
-        subTitle="Votre adresse e-mail certifie votre rattachement à la direction qualité et aux instances soignantes de l'établissement."
+        subTitle="Votre adresse email certifie votre rattachement à la direction qualité et aux instances soignantes de l'établissement."
         items={[
           {
             icon: CheckCircle2,

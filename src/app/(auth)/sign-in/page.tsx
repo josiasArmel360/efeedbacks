@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 import { ShieldCheck, HeartPulse, Activity, Sparkles } from "lucide-react";
 
-import { SignInForm } from "@/components/pages/auth/sign-in-form";
-import { LeftImageSide } from "@/components/left-image-side";
+import { SignInForm } from "@/components/auth/sign-in-form";
+import { LeftImageSide } from "@/components/auth/left-image-side";
 
 export const metadata: Metadata = {
   title: "Connexion Administration",

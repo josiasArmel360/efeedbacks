@@ -12,7 +12,6 @@ import {
   FileText,
   Film,
   ImageOff,
-  Loader2,
   Presentation,
   Star,
   Trash2,
@@ -28,6 +27,7 @@ import { Button } from "@/components/ui/button";
 import { FilePreviewSheet } from "@/components/file-preview-sheet";
 import type { FileInputItem } from "@/lib/uploadthing";
 import { cn } from "@/lib/utils";
+import { Loader } from "../image";
 
 export type FileInputValue = FileInputItem[] | FileInputItem | null;
 
@@ -527,7 +527,7 @@ const FileInputField = ({
         <div className="rounded-lg border border-primary/25 bg-primary/5 p-3 space-y-2">
           <div className="flex items-center justify-between text-xs font-medium text-primary">
             <span className="flex items-center gap-2">
-              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              <Loader size="xs" theme="white" />
               Importation {many ? "des médias" : "du fichier"} vers le stockage
               sécurisé...
             </span>

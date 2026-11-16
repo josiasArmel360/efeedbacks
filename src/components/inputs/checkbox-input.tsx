@@ -58,7 +58,6 @@ const CheckboxField = ({
       className={cn(
         "flex flex-col gap-1.5",
         description && "border p-3 rounded-md flex flex-col gap-2",
-        className,
       )}
     >
       <div className="flex flex-row items-center space-x-2 space-y-0 rounded-xs">
@@ -72,7 +71,7 @@ const CheckboxField = ({
 
         <div className="space-y-1 leading-none">
           <FieldLabel
-            className="text-sm font-medium cursor-pointer"
+            className={cn("text-sm font-medium cursor-pointer", className)}
             htmlFor={resolvedId}
           >
             {label}

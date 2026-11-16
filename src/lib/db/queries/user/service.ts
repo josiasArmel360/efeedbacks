@@ -52,8 +52,14 @@ export const getAll = async (options?: UserFilterOptions) => {
   return await getUsers(options);
 };
 
-export const getOne = async (id: string) => {
-  return await getUser(id);
+export const getOne = async ({
+  id,
+  email,
+}: {
+  email?: string;
+  id?: string;
+}) => {
+  return await getUser({ email, id });
 };
 
 export type { UserFilterOptions };

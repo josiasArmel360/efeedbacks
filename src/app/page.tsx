@@ -20,9 +20,9 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { PublicNavbar } from "@/components/public/navbar";
-import { PublicFooter } from "@/components/public/footer";
-import { QuickTracker } from "@/components/public/quick-tracker";
+import { PublicNavbar } from "@/components/front/navbar";
+import { PublicFooter } from "@/components/front/footer";
+import { QuickTracker } from "@/components/front/quick-tracker";
 import { getActive as getActiveDepartments } from "@/lib/db/server/departments";
 import type { Department } from "@/lib/types";
 

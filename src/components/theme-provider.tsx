@@ -39,6 +39,7 @@ export const SwitchThemeButton = () => {
             ? "Activer le mode clair"
             : "Activer le mode sombre"
       }
+      className="hidden md:inline-flex h-9 px-3.5 text-xs font-semibold gap-1.5 transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/40 hover:text-primary"
     >
       <Sun
         className={cn(

@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 import { CheckCircle2, KeyRound, Mail, ShieldCheck } from "lucide-react";
 
-import { ForgotPasswordForm } from "@/components/pages/auth/forgot-password-form";
-import { LeftImageSide } from "@/components/left-image-side";
+import { ForgotPasswordForm } from "@/components/auth/forgot-password-form";
+import { LeftImageSide } from "@/components/auth/left-image-side";
 
 export const metadata: Metadata = {
   title: "Mot de passe oublié",
@@ -23,7 +23,7 @@ export default function ForgotPasswordPage() {
             icon: Mail,
             title: "Lien à usage unique expédié",
             description:
-              "Un lien d'accès sécurisé et temporaire est immédiatement acheminé à votre adresse e-mail professionnelle.",
+              "Un lien d'accès sécurisé et temporaire est immédiatement acheminé à votre adresse email professionnelle.",
           },
           {
             icon: KeyRound,

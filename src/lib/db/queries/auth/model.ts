@@ -1,6 +1,7 @@
 import { authClient } from "@/lib/auth-client";
 import { SignInPayload } from "./validator";
 import { User } from "@/lib/types";
+import { getOne } from "@/lib/db/server/users";
 
 type RawUser = typeof authClient.$Infer.Session.user;
 export type Session = typeof authClient.$Infer.Session.session;
@@ -15,6 +16,10 @@ export const formatUser = (user: RawUser): User =>
   }) as User;
 
 export const requestPasswordReset = async (email: string) => {
+  const user = await getOne({ email });
+  if (!user) {
+    throw new Error("Adresse email introuvable.");
+  }
   const { error } = await authClient.requestPasswordReset({
     email,
     redirectTo: "/reset-password",
@@ -63,6 +68,13 @@ export const requestEmailChange = async (payload: {
   newEmail: string;
   callbackURL?: string;
 }) => {
+  const user = await getOne({ email: payload.newEmail });
+  if (user) {
+    throw new Error(
+      `Cette adresse email ${payload.newEmail} est déjà utilisée.`,
+    );
+  }
+
   const { error } = await authClient.changeEmail({
     newEmail: payload.newEmail,
     callbackURL: payload.callbackURL || "/profile",
@@ -79,6 +91,11 @@ export const requestVerificationEmail = async (payload: {
   email: string;
   callbackURL?: string;
 }) => {
+  const user = await getOne({ email: payload.email });
+  if (!user) {
+    throw new Error("Adresse email introuvable.");
+  }
+
   const { error } = await authClient.sendVerificationEmail({
     email: payload.email,
     callbackURL: payload.callbackURL || "/email-verified",

@@ -21,7 +21,7 @@ export const useAuth = () => {
     listSessions: auth.listSessions,
     revokeSession: auth.revokeSession,
     revokeOtherSessions: auth.revokeOtherSessions,
-    logOut: auth.logOut,
+    signOut: auth.signOut,
     updateUser: auth.updateUser,
   };
 };

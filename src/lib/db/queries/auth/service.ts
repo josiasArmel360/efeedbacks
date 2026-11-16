@@ -1,6 +1,6 @@
 import { APP_NAME } from "@/lib/constants";
 import type { User } from "@/lib/types";
-import * as model from "./model";
+import * as auth from "./model";
 import { useAuthStore } from "./store";
 import type { SignInPayload } from "./validator";
 
@@ -9,7 +9,7 @@ const store = () => useAuthStore.getState();
 export const hydrate = async () => {
   store().setStatus("loading");
   try {
-    const user = await model.getClientSession();
+    const user = await auth.getClientSession();
     if (user) store().setUser(user);
     else store().reset();
   } catch {
@@ -18,38 +18,38 @@ export const hydrate = async () => {
 };
 
 export const signIn = async (payload: SignInPayload) => {
-  const result = await model.signIn(payload);
+  const result = await auth.signIn(payload);
   if (!("FA2Redirect" in result)) store().setUser(result);
   return result;
 };
 
 export const forgotPassword = async (email: string) => {
-  await model.requestPasswordReset(email);
+  await auth.requestPasswordReset(email);
 };
 
 export const resetPassword = async (payload: {
   newPassword: string;
   token: string;
 }) => {
-  await model.changePassword(payload);
+  await auth.changePassword(payload);
 };
 
 export const sendVerificationEmail = async (payload: {
   email: string;
   callbackURL?: string;
 }) => {
-  await model.requestVerificationEmail(payload);
+  await auth.requestVerificationEmail(payload);
 };
 
 export const verifyEmail = async (token: string) => {
-  await model.verifyEmailToken(token);
+  await auth.verifyEmailToken(token);
 };
 
 export const changeEmail = async (payload: {
   newEmail: string;
   callbackURL?: string;
 }) => {
-  await model.requestEmailChange(payload);
+  await auth.requestEmailChange(payload);
 };
 
 export const updatePassword = async (payload: {
@@ -57,15 +57,15 @@ export const updatePassword = async (payload: {
   newPassword: string;
   revokeOtherSessions?: boolean;
 }) => {
-  await model.updatePassword(payload);
+  await auth.updatePassword(payload);
 };
 
 export const enable2FA = async (password: string) => {
-  return await model.enable2FA(password);
+  return await auth.enable2FA(password);
 };
 
 export const verify2FA = async (code: string) => {
-  const user = await model.verify2FA(code);
+  const user = await auth.verify2FA(code);
   const currentUser = store().user;
   if (currentUser) {
     store().updateUser({ twoFactorEnabled: true });
@@ -76,25 +76,25 @@ export const verify2FA = async (code: string) => {
 };
 
 export const disable2FA = async (password: string) => {
-  await model.disable2FA(password);
+  await auth.disable2FA(password);
   store().updateUser({ twoFactorEnabled: false });
 };
 
 export const listSessions = async () => {
-  return await model.listSessions();
+  return await auth.listSessions();
 };
 
 export const revokeSession = async (token: string) => {
-  await model.revokeSession(token);
+  await auth.revokeSession(token);
 };
 
 export const revokeOtherSessions = async () => {
-  await model.revokeOtherSessions();
+  await auth.revokeOtherSessions();
 };
 
-export const logOut = async () => {
+export const signOut = async () => {
   try {
-    await model.signOut();
+    await auth.signOut();
   } finally {
     if (typeof window !== "undefined") {
       try {
