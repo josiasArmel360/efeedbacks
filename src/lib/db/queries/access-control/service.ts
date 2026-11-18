@@ -1,7 +1,7 @@
 import { cache } from "react";
+import { db } from "@/lib/db/client";
 import {
   getUserException,
-  getUserPolicies,
   saveUserException,
   deleteUserException,
   createAccessPolicy,
@@ -9,11 +9,10 @@ import {
   deleteAccessPolicy,
   getAccessPolicy,
   getAccessPolicies,
-  getAccessPolicyByCode,
   type AccessPolicyFilterOptions,
   manageAccessControl,
 } from "./model";
-import { AllowedModule, CrudAction } from "@/lib/types";
+import { CrudAction } from "@/lib/types";
 import { getSession } from "@/lib/auth";
 import { canDo } from "@/lib/helper/utility";
 import type {
@@ -29,56 +28,45 @@ import type {
 // MOTEUR DE CONTRÔLE D'ACCÈS
 // ============================================================================
 
-export const resolveUserAccess = async (user: {
-  policyId?: string;
-  banned: boolean;
-  id: string;
-}) => {
-  if (user.banned) return { allowedModules: [], hasFullAccess: false };
+export const resolveUserAccess = cache(
+  async (user: { policyId?: string; banned: boolean; id: string }) => {
+    if (user.banned) return { allowedModules: [], hasFullAccess: false };
 
-  const exception = await getUserException(user.id);
-  if (exception) {
-    return {
-      allowedModules: exception.allowedModules || [],
-      hasFullAccess: exception.hasFullAccess || false,
-    };
-  }
+    const userData = await db.query.user.findFirst({
+      where: (u, { eq }) => eq(u.id, user.id),
+      with: {
+        policy: true,
+        permissionException: true,
+      },
+    });
 
-  const policyId = user.policyId;
-  if (!policyId) {
-    return { allowedModules: [], hasFullAccess: false };
-  }
-
-  const policies = await getUserPolicies(policyId);
-
-  if (policies.length === 0) {
-    return { allowedModules: [], hasFullAccess: false };
-  }
-
-  let hasFullAccess = false;
-  const mergedModules = new Map<string, Set<CrudAction>>();
-
-  for (const policy of policies) {
-    if (policy.hasFullAccess) hasFullAccess = true;
-    for (const mod of policy.allowedModules || []) {
-      if (!mod.hasAccess) continue;
-      const currentActions =
-        mergedModules.get(mod.resource) || new Set<CrudAction>();
-      (mod.actions || []).forEach((a) => currentActions.add(a));
-      mergedModules.set(mod.resource, currentActions);
+    if (!userData || userData.banned || userData.deletedAt) {
+      return { allowedModules: [], hasFullAccess: false };
     }
-  }
 
-  const allowedModules: AllowedModule[] = Array.from(
-    mergedModules.entries(),
-  ).map(([resource, actionsSet]) => ({
-    resource,
-    hasAccess: true,
-    actions: Array.from(actionsSet),
-  }));
+    // 1. Dérogation prioritaire
+    if (userData.permissionException) {
+      return {
+        allowedModules: userData.permissionException.allowedModules || [],
+        hasFullAccess: userData.permissionException.hasFullAccess || false,
+      };
+    }
 
-  return { allowedModules, hasFullAccess };
-};
+    // 2. Politique directe O(1)
+    if (
+      userData.policy &&
+      userData.policy.isActive &&
+      !userData.policy.deletedAt
+    ) {
+      return {
+        allowedModules: userData.policy.allowedModules || [],
+        hasFullAccess: userData.policy.hasFullAccess || false,
+      };
+    }
+
+    return { allowedModules: [], hasFullAccess: false };
+  },
+);
 
 export const requireAccess = cache(
   async (resource: string, action: CrudAction = "read"): Promise<boolean> => {
@@ -124,10 +112,6 @@ export const getPolicies = async (options?: AccessPolicyFilterOptions) => {
   return await getAccessPolicies(options);
 };
 
-export const getPolicyByCode = async (code: string) => {
-  return await getAccessPolicyByCode(code);
-};
-
 export const manageAccess = async (payload: AccessControlData) => {
   return await manageAccessControl(payload);
 };
@@ -148,13 +132,4 @@ export const getException = async (userId: string) => {
   return await getUserException(userId);
 };
 
-// export const getExceptions = async () => {
-//   return await getAllUsersExceptions();
-// };
-
-// CreateAccessPolicyPayload,
-// UpdateAccessPolicyPayload,
-// DeleteAccessPolicyPayload,
-// SaveUserExceptionPayload,
-// DeleteUserExceptionPayload,
 export type { AccessPolicyFilterOptions };

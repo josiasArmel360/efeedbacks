@@ -7,7 +7,7 @@ import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { toast } from "sonner";
 
 import { exportTableToExcel } from "@/lib/helper/excel-export";
-import { UserRound, RotateCcw, Ban, ShieldAlert, Shield } from "lucide-react";
+import { UserRound, RotateCcw, Ban, ShieldAlert, Shield, ShieldCheck } from "lucide-react";
 
 import { usePermissions } from "@/hooks/use-permissions";
 import { RESOURCE } from "@/lib/config/access.modules";
@@ -19,6 +19,7 @@ import { Modal } from "@/components/modal";
 import { ConfirmModal } from "@/components/confirm-modal";
 import { UserForm } from "@/components/back-office/settings/user-form";
 import { UserBanForm } from "@/components/back-office/settings/user-ban-form";
+import { UserExceptionForm } from "@/components/back-office/settings/user-exception-form";
 import { ActionsButton } from "@/components/buttons";
 import { DataTable, DTFeatures, SortColumn } from "@/components/data-table";
 import { Badge } from "@/components/badge";
@@ -77,6 +78,12 @@ export const UserView = ({
 
   // Modal Confirmation de Suppression (Soft-delete)
   const [deleteState, setDeleteState] = useState<{
+    open: boolean;
+    data?: User;
+  }>({ open: false });
+
+  // Modal Dérogations Utilisateur
+  const [exceptionState, setExceptionState] = useState<{
     open: boolean;
     data?: User;
   }>({ open: false });
@@ -224,6 +231,24 @@ export const UserView = ({
                 }
               />
 
+              {/* Accès personnalisés (Dérogations) */}
+              <ActionsButton
+                icon="ShieldCheck"
+                color={userItem.permissionException ? "amber" : "emerald"}
+                tooltipLabel={
+                  userItem.permissionException
+                    ? "Dérogation active (Modifier)"
+                    : "Définir des accès personnalisés"
+                }
+                hasAccess={canUpdate}
+                onClick={() =>
+                  setExceptionState({
+                    open: true,
+                    data: userItem,
+                  })
+                }
+              />
+
               {/* Suspendre (si non banni) ou Réactiver (si banni) */}
               {!isBanned ? (
                 <ActionsButton
@@ -341,6 +366,34 @@ export const UserView = ({
         />
       )}
 
+      {/* Modal Dérogations Utilisateur (Accès personnalisés) */}
+      {exceptionState.data && (
+        <Modal
+          open={exceptionState.open}
+          onOpenChange={(open) =>
+            setExceptionState((prev) => ({ ...prev, open }))
+          }
+          title={`Accès personnalisés : ${exceptionState.data.name}`}
+          description="Configurez les dérogations d'accès spécifiques pour ce collaborateur. Ces droits surchargent sa politique d'accès par défaut."
+          className="md:max-w-4xl"
+          contentScrollable
+          icon={ShieldCheck}
+        >
+          <UserExceptionForm
+            key={exceptionState.data.id}
+            user={exceptionState.data}
+            policy={policies.find(
+              (p) => p.id === exceptionState.data?.policyId,
+            )}
+            canUpdate={canUpdate}
+            onSuccess={async () => {
+              await onRefresh();
+              setExceptionState({ open: false });
+            }}
+          />
+        </Modal>
+      )}
+
       {/* Modal de Confirmation de Suppression (Soft-delete) */}
       {deleteState.data && (
         <ConfirmModal
@@ -426,7 +479,23 @@ const columns = [
     header: (info) => (
       <SortColumn info={info} icon="string" columnName="Fonction & Rôle" />
     ),
-    cell: (info) => renderRoleBadge(info.getValue() || "Utilisateur"),
+    cell: (info) => {
+      const u = info.row.original;
+      return (
+        <div className="flex items-center gap-1.5 flex-wrap">
+          {renderRoleBadge(info.getValue() || "Utilisateur")}
+          {u.permissionException && (
+            <Badge
+              variant="outline"
+              className="bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-300 dark:border-amber-800 text-[10px] py-0 px-1 gap-0.5"
+            >
+              <ShieldCheck className="size-2.5" />
+              Dérogation
+            </Badge>
+          )}
+        </div>
+      );
+    },
   }),
   columnHelper.accessor("email", {
     id: "email",

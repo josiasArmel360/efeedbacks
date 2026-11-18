@@ -456,7 +456,10 @@ export const getUser = async ({
         if (email) return eq(u.email, email);
         return undefined;
       },
-      with: { policy: { columns: { id: true, name: true, code: true } } },
+      with: {
+        policy: { columns: { id: true, name: true, code: true } },
+        permissionException: true,
+      },
     });
 
     return user ?? null;
@@ -482,7 +485,10 @@ export const getUsers = async (
 
         return conditions.length > 0 ? and(...conditions) : undefined;
       },
-      with: { policy: { columns: { id: true, name: true, code: true } } },
+      with: {
+        policy: { columns: { id: true, name: true, code: true } },
+        permissionException: true,
+      },
       orderBy: (u, { desc }) => [desc(u.createdAt)],
     });
 

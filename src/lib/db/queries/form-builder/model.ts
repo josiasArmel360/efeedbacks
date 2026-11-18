@@ -205,26 +205,6 @@ export const deleteSurveySection = safeAc
 // 2. SECTIONS THÉMATIQUES (LECTURES & REQUÊTES)
 // ============================================================================
 
-export const getSurveySection = async (
-  id: string,
-): Promise<SurveySection | null> => {
-  try {
-    const sec = await db.query.surveySection.findFirst({
-      where: (s, { eq }) => eq(s.id, id),
-      with: {
-        fields: {
-          orderBy: (f, { asc }) => [asc(f.orderIndex), asc(f.label)],
-        },
-      },
-    });
-
-    return (sec as SurveySection) || null;
-  } catch (error) {
-    console.error("Erreur serveur (getSurveySection):", error);
-    return null;
-  }
-};
-
 export const getSurveySections = async (
   options?: SurveySectionFilterOptions,
 ): Promise<SurveySection[]> => {
@@ -465,26 +445,6 @@ export const deleteSurveyField = safeAc
 // ============================================================================
 // 4. CRITÈRES & QUESTIONS (LECTURES & REQUÊTES)
 // ============================================================================
-
-export const getSurveyField = async (
-  id: string,
-): Promise<SurveyField | null> => {
-  try {
-    const field = await db.query.surveyField.findFirst({
-      where: (f, { eq }) => eq(f.id, id),
-      with: {
-        section: {
-          columns: { id: true, title: true, orderIndex: true },
-        },
-      },
-    });
-
-    return (field as SurveyField) || null;
-  } catch (error) {
-    console.error("Erreur serveur (getSurveyField):", error);
-    return null;
-  }
-};
 
 export const getSurveyFields = async (
   options?: SurveyFieldFilterOptions,

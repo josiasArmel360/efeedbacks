@@ -264,41 +264,6 @@ export const getAccessPolicies = async (
   }
 };
 
-export const getAccessPolicyByCode = async (
-  code: string,
-): Promise<AccessPolicy | null> => {
-  try {
-    const policy = await db.query.accessPolicy.findFirst({
-      where: (r, { and, eq, isNull }) =>
-        and(eq(r.code, code.trim().toLowerCase()), isNull(r.deletedAt)),
-    });
-    return policy ?? null;
-  } catch {
-    return null;
-  }
-};
-
-export const getUserPolicies = async (policyId: string) => {
-  try {
-    const policies = await db.query.accessPolicy.findMany({
-      where: (ap, { eq, and, isNull }) => {
-        return and(
-          eq(ap.isActive, true),
-          eq(ap.id, policyId),
-          isNull(ap.deletedAt),
-        );
-      },
-    });
-    return policies || [];
-  } catch (error) {
-    console.error(
-      "Erreur lors de la récupération des politiques d'accès:",
-      error,
-    );
-    return [];
-  }
-};
-
 // ============================================================================
 // DÉROGATIONS UTILISATEURS (USER PERMISSION EXCEPTIONS)
 // ============================================================================
@@ -356,8 +321,8 @@ export const saveUserException = safeAc
         );
       }
 
-      revalidatePath("/admin/settings/access-rights");
       revalidatePath("/settings/access-rights");
+      revalidatePath("/settings/users");
       revalidatePath("/", "layout");
 
       return {
@@ -401,8 +366,8 @@ export const deleteUserException = safeAc
         );
       }
 
-      revalidatePath("/admin/settings/access-rights");
       revalidatePath("/settings/access-rights");
+      revalidatePath("/settings/users");
       revalidatePath("/", "layout");
 
       return {
@@ -431,20 +396,5 @@ export const getUserException = async (userId: string) => {
       error,
     );
     return null;
-  }
-};
-
-export const getAllUsersExceptions = async () => {
-  try {
-    const exceptions = await db.query.permissionException.findMany({
-      with: { user: true },
-    });
-    return exceptions;
-  } catch (error) {
-    console.error(
-      "Erreur lors de la récupération des exceptions d'accès:",
-      error,
-    );
-    return [];
   }
 };

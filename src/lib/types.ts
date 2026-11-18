@@ -48,6 +48,15 @@ export interface AccessPolicy {
   deletedAt?: Date | null;
 }
 
+export interface UserPermissionException {
+  id: string;
+  userId: string;
+  allowedModules: AllowedModule[];
+  hasFullAccess: boolean;
+  createdAt: Date;
+  updatedAt?: Date | null;
+}
+
 export interface User {
   policyId: string;
 
@@ -68,6 +77,7 @@ export interface User {
 
   permissions?: Permissions | null;
   policy?: Pick<AccessPolicy, "id" | "name" | "code"> | null;
+  permissionException?: UserPermissionException | null;
 }
 
 export interface Department {

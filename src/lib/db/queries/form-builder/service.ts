@@ -2,13 +2,11 @@ import {
   createSurveySection,
   updateSurveySection,
   deleteSurveySection,
-  getSurveySection,
   getSurveySections,
   getPublicSurveySections as fetchPublicSurveySections,
   createSurveyField,
   updateSurveyField,
   deleteSurveyField,
-  getSurveyField,
   getSurveyFields,
   type SurveySectionFilterOptions,
   type SurveyFieldFilterOptions,
@@ -46,10 +44,6 @@ export const getPublicSections = async () => {
   return await fetchPublicSurveySections();
 };
 
-export const getOneSection = async (id: string) => {
-  return await getSurveySection(id);
-};
-
 // ============================================================================
 // CRITÈRES & QUESTIONS
 // ============================================================================
@@ -70,10 +64,6 @@ export const getAllFields = async (options?: SurveyFieldFilterOptions) => {
   return await getSurveyFields(options);
 };
 
-export const getOneField = async (id: string) => {
-  return await getSurveyField(id);
-};
-
 export type {
   SurveySectionFilterOptions,
   SurveyFieldFilterOptions,
@@ -84,4 +74,3 @@ export type {
   UpdateSurveyFieldPayload,
   DeleteSurveyFieldPayload,
 };
-

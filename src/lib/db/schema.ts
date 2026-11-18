@@ -10,7 +10,7 @@ import {
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 
 import {
   FeedbackPriority,
@@ -64,7 +64,9 @@ export const accessPolicy = pgTable(
     deletedAt: timestamp("deleted_at"),
   },
   (table) => [
-    index("access_policies_code_idx").on(table.code),
+    uniqueIndex("access_policies_code_unique")
+      .on(table.code)
+      .where(sql`deleted_at IS NULL`),
     index("access_policies_deleted_idx").on(table.deletedAt),
   ],
 );
@@ -76,8 +78,8 @@ export const user = pgTable(
   "user",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    policyId: uuid("role_id")
-      .references(() => accessPolicy.id)
+    policyId: uuid("policy_id")
+      .references(() => accessPolicy.id, { onDelete: "restrict" })
       .notNull(),
     name: text("name").notNull(),
     email: text("email").notNull().unique(),
@@ -97,7 +99,7 @@ export const user = pgTable(
       .$onUpdate(() => new Date()),
   },
   (table) => [
-    index("user_role_id_idx").on(table.policyId),
+    index("user_policy_id_idx").on(table.policyId),
     index("user_deleted_idx").on(table.deletedAt),
   ],
 );
